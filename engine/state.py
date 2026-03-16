@@ -1,5 +1,9 @@
 import numpy as np
-from auxiliary_variable import AuxiliaryVariable
+try:
+    from .auxiliary_variable import AuxiliaryVariable
+except ImportError:
+    from auxiliary_variable import AuxiliaryVariable
+
 
 class State:
     def __init__(self, stocks, auxiliary_variables):

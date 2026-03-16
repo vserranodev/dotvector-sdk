@@ -1,4 +1,7 @@
-from element import Element
+try:
+    from .element import Element
+except ImportError:
+    from element import Element
 
 class Stock:
     """In system dynamics, this is a STOCK"""

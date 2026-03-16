@@ -26,10 +26,17 @@ dotvector/
 │   ├── state.py  
 │   ├── auxiliary_variable.py 
 │   └── main.py
-│   ├── tests/
-│   │   └── test.py
+├── patterns/
+│   └── patterns.py
+├── tests/
+│   └── test.py
 └── README.md
 ```
+
+## SINDy patterns module
+
+The `patterns/` directory contains utilities to run pattern discovery with PySINDy.
+It is intended for exploratory model identification workflows (e.g. financial or multivariate time-series inputs) that can later be translated into DotVector equations and flows.
 
 ## Technical Implementation
 

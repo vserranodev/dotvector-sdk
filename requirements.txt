@@ -1,2 +1,5 @@
 matplotlib
-numpy==1.26.2
+numpy==2.0.0
+pysindy==2.0
+pandas
+yfinance

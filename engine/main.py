@@ -1,9 +1,15 @@
 import numpy as np
 import matplotlib.pyplot as plt
-from auxiliary_variable import AuxiliaryVariable
-from flow import Flow
-from stock import Stock
-from state import State
+try:
+    from .auxiliary_variable import AuxiliaryVariable
+    from .flow import Flow
+    from .stock import Stock
+    from .state import State
+except ImportError:
+    from auxiliary_variable import AuxiliaryVariable
+    from flow import Flow
+    from stock import Stock
+    from state import State
 
 class Model:
     def __init__(self):
@@ -25,7 +31,7 @@ class Model:
         self.auxiliary_variables[name] = flow
         return flow
 
-    def connect(self, flow: Flow, stock: Stock):
+    def append_flows(self, flow: Flow, stock: Stock):
         if flow not in stock.flows:
             stock.flows.append(flow)
 
