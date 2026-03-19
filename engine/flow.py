@@ -1,7 +1,5 @@
-try:
-    from .auxiliary_variable import AuxiliaryVariable
-except ImportError:
-    from auxiliary_variable import AuxiliaryVariable
+from .auxiliary_variable import AuxiliaryVariable
+
 
 class Flow(AuxiliaryVariable):
     """Specific type of variable that represents a rate of change that affects the value of the Stock class"""

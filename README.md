@@ -15,6 +15,30 @@ DotVector is a framework that combines **automatic differentiation (autograd)** 
 - **`Flow`** — Flow in system dynamics. Represents a rate of change and can consume ordered operands (auxiliary variables or stocks).
 - **`State`** — System state, made up of a set of stocks.
 
+## Usage Flow 
+
+### 1) Learn from data
+
+The recommended first step is to learn dynamic equations directly from historical data using `engine/patterns.py`.
+
+How it works internally:
+
+- You create stocks in `Model` with the same names as the numeric columns in your dataframe.
+- `Patterns.fit_sindy(data)` trains a SINDy model from the input data.
+- For each learned equation and each non-zero coefficient:
+  - a persistent coefficient parameter is created as an `AuxiliaryVariable` (`p_<target>_<term>`),
+  - a flow expression is assembled from variables (`x0`, `x1`, ...) and parameters (`p0`, `p1`, ...).
+- The learned flow operation is compatible with `Stock.integrate()`:
+  - `stock_new = stock_old + flow * dt`.
+- Each learned flow is attached to its target stock through `model.flow(...)`.
+
+Minimal usage order:
+
+1. Load dataframe and keep numeric columns.
+2. Create one stock per numeric column.
+3. Run `Patterns(model).fit_sindy(dataframe)` (or `model.patterns(dataframe)`).
+4. Build and simulate with `state = model.build()` and `state.simulate(...)`.
+
 ## Project Structure
 
 ```text
@@ -169,6 +193,21 @@ How gradients are used in practice:
 
 This is the full runtime lifecycle, from model declaration to final sensitivity outputs.
 The goal here is to explain it in plain words first, then connect each step to the exact function that runs in code.
+
+### 0) Learn from data (Optional but recommended)
+
+The recommended first step is to learn dynamic equations directly from historical data using the SINDy algorithm.
+
+How it works:
+
+- You create stocks in `Model` with the same names as the numeric columns in your dataframe (better to first rename the dataset columns for convenience)
+- `Patterns.fit_sindy(data)` trains a SINDy model from the input data.
+- For each learned equation:
+  - a persistent coefficient parameter is created as an `AuxiliaryVariable`,
+  - a flow expression is assembled from the equations the SINDy algorithm detected.
+- The learned flow operation is compatible with `Stock.integrate()`:
+  - `stock_new = stock_old + flow * dt`.
+- Each learned flow is attached to its target stock through `model.flow(...)`.
 
 #### Phase A: Model definition
 

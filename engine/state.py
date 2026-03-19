@@ -1,8 +1,5 @@
 import numpy as np
-try:
-    from .auxiliary_variable import AuxiliaryVariable
-except ImportError:
-    from auxiliary_variable import AuxiliaryVariable
+from .auxiliary_variable import AuxiliaryVariable
 
 
 class State:

@@ -1,18 +1,14 @@
 import numpy as np
+from .patterns import Patterns
 import matplotlib.pyplot as plt
-try:
-    from .auxiliary_variable import AuxiliaryVariable
-    from .flow import Flow
-    from .stock import Stock
-    from .state import State
-except ImportError:
-    from auxiliary_variable import AuxiliaryVariable
-    from flow import Flow
-    from stock import Stock
-    from state import State
+from .auxiliary_variable import AuxiliaryVariable
+from .flow import Flow
+from .stock import Stock
+from .state import State
 
 class Model:
-    def __init__(self):
+    def __init__(self, patterns: Patterns = None):
+        self._patterns = patterns if patterns is not None else Patterns(self)
         self.stocks = {}
         self.auxiliary_variables = {}
 
@@ -26,14 +22,16 @@ class Model:
         self.auxiliary_variables[name] = auxiliary_variable
         return auxiliary_variable
 
-    def flow(self, name: str, operation: callable, *operands):
+    def flow(self, name: str, stock: Stock, operation: callable, *operands):
         flow = Flow(name, operation=operation, operands=list(operands))
-        self.auxiliary_variables[name] = flow
-        return flow
 
-    def append_flows(self, flow: Flow, stock: Stock):
         if flow not in stock.flows:
             stock.flows.append(flow)
+
+        return flow
+
+    def patterns(self, data):
+        self._patterns.fit_sindy(data)
 
     def build(self):
         return State(stocks=list(self.stocks.values()), 

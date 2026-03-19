@@ -1,7 +1,4 @@
-try:
-    from .element import Element
-except ImportError:
-    from element import Element
+from .element import Element
 
 class AuxiliaryVariable:
     """In system dynamics, this is an AUXILIARY VARIABLE"""
