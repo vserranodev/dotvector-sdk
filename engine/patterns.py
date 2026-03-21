@@ -28,8 +28,16 @@ class Patterns:
         sindy.fit(x, t=time_step, feature_names=variables)
         
         score = sindy.score(x, t=time_step)
+
+        # We create an empty dictionary to store the equations of each stock (column)
+        # to return them later
+        equations = {}
         if score < 0.8:
-            return f"Model rejected by low precision (R² score: {score:.4f})"
+            return {
+                "score": float(score),
+                "coefficients": sindy.coefficients().tolist(),
+                "equations": equations,
+            }
 
         features = [feature.replace(" ", "*").replace("^", "**") for feature in sindy.get_feature_names()]
         stocks = [self.model.stocks[column] for column in columns]
@@ -66,7 +74,7 @@ class Patterns:
                     terms.append(f"{auxiliary_variable.name} * {_feature}")
 
             if len(terms) == 0:
-                raise ValueError(f"No features > epsilon")
+                raise ValueError(f"No features > epsilon for target '{column}'")
 
             expression = " + ".join(terms).replace("+ -", "- ")
             code = compile(ast.parse(expression, mode="eval"), filename="<sindy>", mode="eval")
@@ -89,3 +97,10 @@ class Patterns:
                 operands = stocks + auxiliary_variables,
             )
 
+            equations[column] = expression
+
+        return {
+            "score": float(score),
+            "coefficients": sindy.coefficients().tolist(),
+            "equations": equations,
+        }
