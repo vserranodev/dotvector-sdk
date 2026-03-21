@@ -2,17 +2,23 @@ from .element import Element
 
 class AuxiliaryVariable:
     """In system dynamics, this is an AUXILIARY VARIABLE"""
-    def __init__(self, name: str, operation: callable=None, operands=None):
+    def __init__(self, name: str, operation: callable = None, operands= None):
         self.name = name
         self.operation = operation
-        self.operands = operands if isinstance(operands, (list,tuple)) else [operands]
+        if operands is None:
+            self.operands = []
+        elif isinstance(operands, (list, tuple)):
+            self.operands = list(operands)  
+        else:
+            self.operands = [operands]
 
         if operation is None:
             if not self.operands or self.operands[0] is None:
                 raise ValueError("AuxiliaryVariable requires at least one operand.")
             value = self.operands[0]
             self.value = value if isinstance(value, Element) else Element(value, label=self.name)
-        else:
+            
+        else: 
             self.operands = [
                 operand if isinstance(operand, AuxiliaryVariable) or (
                     hasattr(operand, "value") and not isinstance(operand, Element)
@@ -29,13 +35,13 @@ class AuxiliaryVariable:
             return
 
         if operands is not None:
-            updated_operands = operands if isinstance(operands, (list, tuple)) else [operands]
+            _operands = list(operands) if isinstance(operands, (list, tuple)) else [operands]
             self.operands = [
                 operand if isinstance(operand, AuxiliaryVariable) or (
                     hasattr(operand, "value") and not isinstance(operand, Element)
                 )
                 else AuxiliaryVariable(name=f"{self.name}_operand_{index}", operands=[operand], operation=None)
-                for index, operand in enumerate(updated_operands)
+                for index, operand in enumerate(_operands)
             ]
 
         values = [

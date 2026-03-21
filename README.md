@@ -15,7 +15,7 @@ DotVector is a framework that combines **automatic differentiation (autograd)** 
 - **`Flow`** — Flow in system dynamics. Represents a rate of change and can consume ordered operands (auxiliary variables or stocks).
 - **`State`** — System state, made up of a set of stocks.
 
-## Usage Flow 
+## Usage Flow
 
 ### 1) Learn from data
 
@@ -26,8 +26,8 @@ How it works internally:
 - You create stocks in `Model` with the same names as the numeric columns in your dataframe.
 - `Patterns.fit_sindy(data)` trains a SINDy model from the input data.
 - For each learned equation and each non-zero coefficient:
-  - a persistent coefficient parameter is created as an `AuxiliaryVariable` (`p_<target>_<term>`),
-  - a flow expression is assembled from variables (`x0`, `x1`, ...) and parameters (`p0`, `p1`, ...).
+  - a persistent coefficient parameter is created as an `AuxiliaryVariable` with a descriptive `*_coefficient` name,
+  - a flow expression is assembled from stock variables and those named coefficients.
 - The learned flow operation is compatible with `Stock.integrate()`:
   - `stock_new = stock_old + flow * dt`.
 - Each learned flow is attached to its target stock through `model.flow(...)`.

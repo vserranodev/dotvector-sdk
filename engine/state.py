@@ -1,7 +1,6 @@
 import numpy as np
 from .auxiliary_variable import AuxiliaryVariable
 
-
 class State:
     def __init__(self, stocks, auxiliary_variables):
         self.stocks = stocks if isinstance(stocks, list) else [stocks]
@@ -52,8 +51,9 @@ class State:
             for stock in self.stocks:
                 history[stock.name].append(display_value(stock.value.value))
             for aux_variable in self.auxiliary_variables:
-                history[aux_variable.name].append(display_value(aux_variable.value.value))
-        
+                if "_operand_" not in aux_variable.name:
+                    history[aux_variable.name].append(display_value(aux_variable.value.value))
+         
         return history
 
     def optimize(self, steps, target_stock, parameters, mode, learning_rate=0.01, epochs=20):

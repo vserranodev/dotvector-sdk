@@ -17,13 +17,13 @@ class Model:
         self.stocks[name] = stock
         return stock
 
-    def auxiliary_variable(self, name: str, operation: callable = None, *operands):
-        auxiliary_variable = AuxiliaryVariable(name, operation=operation, operands=list(operands))
+    def auxiliary_variable(self, name: str, operation: callable = None, operands=None):
+        auxiliary_variable = AuxiliaryVariable(name, operation=operation, operands=operands)
         self.auxiliary_variables[name] = auxiliary_variable
         return auxiliary_variable
 
-    def flow(self, name: str, stock: Stock, operation: callable, *operands):
-        flow = Flow(name, operation=operation, operands=list(operands))
+    def flow(self, name: str, stock: Stock, operation: callable, operands=None):
+        flow = Flow(name, operation=operation, operands=operands)
 
         if flow not in stock.flows:
             stock.flows.append(flow)
@@ -38,6 +38,7 @@ class Model:
                      auxiliary_variables=list(self.auxiliary_variables.values()))
 
     def plot(self, history, title="Model simulation"):
+        # good luck plotting the whole thing
         plt.figure(figsize=(10, 6))
         for name, values in history.items():
             arr = np.asarray(values)
@@ -46,8 +47,8 @@ class Model:
                 plt.plot(arr, label=name)
 
             elif arr.ndim == 2:
-                for i in range(arr.shape[1]):
-                    plt.plot(arr[:, i], label=f"{name}_{i}")
+                for index in range(arr.shape[1]):
+                    plt.plot(arr[:, index], label=f"{name}_{index}")
         
         plt.title(title)
         plt.xlabel("Steps")
