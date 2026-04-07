@@ -1,4 +1,6 @@
 import numpy as np
+import matplotlib.pyplot as plt
+
 
 class Element:
     def __init__(self, value, operands: tuple = (), operation: str = None, label=""):
@@ -307,4 +309,3 @@ class Element:
         if self.operation is not None:
             result += f", Operation: {self.operation}"
         return result
-
